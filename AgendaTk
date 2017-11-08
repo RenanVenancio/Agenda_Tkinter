@@ -1,0 +1,169 @@
+from tkinter import*
+from tkinter import messagebox
+
+class tela_cad:
+    def __init__(self, janela):
+
+        self.nome = []
+        self.endereco = []
+        self.telcomercial = []
+        self.telresidencial = []
+        self.celular = []
+        self.email = []
+
+
+
+        self.jan = janela
+
+        self.cab = Frame(janela)     #container para acomodar os botoões do cabeçalho
+        self.campos  = Frame(janela) ##container para acomodar os campos
+
+        self.bt_novo = Button(self.cab, width=10, text='Novo')
+        self.bt_gravar = Button(self.cab, width=10, text='Gravar', command = self.gravar)
+        self.bt_excl = Button(self.cab, width=10, text='Excluir',command = self.msgConfirm)
+        self.bt_prim = Button(self.cab, width=5, text='<<')
+        self.bt_ant = Button(self.cab, width=6, text='<', command = self.reg_ant)
+        self.bt_prox = Button(self.cab, width=6, text='>',command = self.prox_reg)
+        self.bt_ult = Button(self.cab, width=5, text='>>')
+        self.lbl_det = Label(self.cab,width=50)
+        self.lbl_indice = Label(self.cab, width=5, text='0')
+
+        self.lbl_nome = Label(self.campos, width=12,text='Nome')
+        self.txt_nome = Entry (self.campos, width=61)
+
+        self.lbl_end = Label(self.campos, width=12,text='Endereço:')
+        self.txt_end = Entry (self.campos, width=61, text='Endereço')
+
+        self.lbl_telc = Label(self.campos, width=12,text='Tel. Comercial:')
+        self.txt_telc = Entry (self.campos, width=20)
+
+        self.lbl_cel = Label(self.campos, width=12, text='Tel. Celular:')
+        self.txt_cel = Entry(self.campos, width=20)
+
+        self.lbl_telres = Label(self.campos, width=12,text='Tel. Residencial:')
+        self.txt_telres = Entry (self.campos, width=20)
+
+        self.lbl_mail = Label(self.campos, width=12, text='E-mail:')
+        self.txt_mail = Entry(self.campos, width=20)
+
+
+#Gerenciando Layout dos botoes principais
+        self.lbl_indice.pack(anchor=NW, side=LEFT)
+        self.bt_novo.pack(anchor = N, side = LEFT)
+        self.bt_gravar.pack(anchor = N, side = LEFT)
+        self.bt_excl.pack(anchor = N, side = LEFT)
+        self.bt_prim.pack(anchor = NW, side = LEFT)
+        self.bt_ant.pack(anchor = NW, side = LEFT)
+        self.bt_prox.pack(anchor = NW, side = LEFT)
+        self.bt_ult.pack(anchor = NW, side = LEFT)
+
+
+#Gerenciando Layout dos campos
+        self.lbl_nome.pack(anchor =W)
+        self.txt_nome.pack()
+        self.lbl_end.pack(anchor =W)
+        self.txt_end.pack()
+        self.lbl_telc.pack(anchor=W)
+        self.txt_telc.pack(anchor=W)
+        self.lbl_telres.pack(anchor=W)
+        self.txt_telres.pack(anchor=W)
+        self.lbl_cel.pack(anchor=W)
+        self.txt_cel.pack(anchor=W)
+        self.lbl_mail.pack(anchor=W)
+        self.txt_mail.pack(anchor=W)
+
+
+
+
+        self.jan.title("Cadastro")
+
+        self.cab.pack(anchor = N)
+        self.campos.pack()
+
+
+
+#Funções dos botões
+    def msgConfirm(self):
+        if messagebox.askyesno('Confirmar','Deseja excluir esse contato?') == True:
+            print('Chame a função de Excluir')
+            re = self.lbl_nome['text']
+            print(re)
+        else:
+            print('Não chame a função')
+
+
+    def gravar(self):   #Lançando nomes na lista   *O BOTÃO GRAVAR CHAMA ESSA FUNÇÃO
+        pega_nome = self.txt_nome.get()
+        self.nome.append(pega_nome)
+
+        pega_end = self.txt_end.get()
+        self.endereco.append(pega_end)
+
+        pega_tlrs = self.txt_telres.get()
+        self.telresidencial.append(pega_tlrs)
+
+        pega_tlc = self.txt_telc.get()
+        self.telcomercial.append(pega_tlc)
+
+        pega_cel = self.txt_cel.get()
+        self.celular.append(pega_cel)
+
+        pega_email = self.txt_mail.get()
+        self.email.append(pega_email)
+
+
+    def prox_reg(self):
+        max = len(self.nome)   #conta quantos indices há na lista
+        print ("LISTA COM %i ITENS"%max)
+        i=pega_end = self.lbl_indice['text']
+        i=int(i)
+
+        self.txt_nome.delete(0, 'end')
+        self.txt_end.delete(0, 'end')
+
+        self.txt_nome.insert(0, self.nome[i])
+        self.txt_end.insert(0, self.endereco[i])
+        self.txt_telc.insert(0, self.telcomercial[i])
+        self.txt_telres.insert(0, self.telresidencial[i])
+        self.txt_cel.insert(0, self.celular[i])
+        self.txt_mail.insert(0, self.email[i])
+        print(i)
+
+        if (i+2<=max):
+            i=i+1
+            self.lbl_indice['text'] = i
+        else:
+            messagebox.showinfo('Aviso', 'Esse é o último registro')
+
+    def reg_ant(self):
+        max = len(self.nome)  # conta quantos indices há na lista
+        print("LISTA COM %i ITENS" % max)
+        i = pega_end = self.lbl_indice['text']
+        i = int(i)
+
+        self.txt_nome.delete(0, 'end')
+        self.txt_end.delete(0, 'end')
+        i = i - 1
+        self.txt_nome.insert(0, self.nome[i])
+        self.txt_end.insert(0, self.endereco[i])
+        self.txt_telc.insert(0, self.telcomercial[i])
+        self.txt_telres.insert(0, self.telresidencial[i])
+        self.txt_cel.insert(0, self.celular[i])
+        self.txt_mail.insert(0, self.email[i])
+        print(i)
+
+
+
+        self.lbl_indice['text'] = i
+
+        if (i < 1):
+            messagebox.showinfo('Aviso', 'Esse é o primeiro registro')
+#Fim das funções dos botões        
+    
+
+
+
+#jan.geometry('800x600')
+c = Tk()
+t_cad = tela_cad(c)
+c.mainloop()

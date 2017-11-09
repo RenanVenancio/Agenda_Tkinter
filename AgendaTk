@@ -86,7 +86,7 @@ class tela_cad:
     def msgConfirm(self):
         if messagebox.askyesno('Confirmar','Deseja excluir esse contato?') == True:
             print('Chame a função de Excluir')
-            re = self.lbl_nome['text']
+            self.deletar()
             print(re)
         else:
             print('Não chame a função')
@@ -113,51 +113,89 @@ class tela_cad:
 
 
     def prox_reg(self):
+
+
+        
         max = len(self.nome)   #conta quantos indices há na lista
         print ("LISTA COM %i ITENS"%max)
         i=pega_end = self.lbl_indice['text']
         i=int(i)
 
-        self.txt_nome.delete(0, 'end')
-        self.txt_end.delete(0, 'end')
-
-        self.txt_nome.insert(0, self.nome[i])
-        self.txt_end.insert(0, self.endereco[i])
-        self.txt_telc.insert(0, self.telcomercial[i])
-        self.txt_telres.insert(0, self.telresidencial[i])
-        self.txt_cel.insert(0, self.celular[i])
-        self.txt_mail.insert(0, self.email[i])
-        print(i)
-
         if (i+2<=max):
             i=i+1
             self.lbl_indice['text'] = i
+            self.txt_nome.delete(0, 'end')
+            self.txt_end.delete(0, 'end')
+
+            self.txt_nome.insert(0, self.nome[i])
+            self.txt_end.insert(0, self.endereco[i])
+            self.txt_telc.insert(0, self.telcomercial[i])
+            self.txt_telres.insert(0, self.telresidencial[i])
+            self.txt_cel.insert(0, self.celular[i])
+            self.txt_mail.insert(0, self.email[i])
+            print(i)
+
+            
         else:
             messagebox.showinfo('Aviso', 'Esse é o último registro')
 
+    def limpa_campos(self):
+        self.txt_nome.delete(0, 'end')
+        self.txt_end.delete(0, 'end')
+        self.txt_telc.delete(0, 'end')
+        self.txt_telres.delete(0, 'end')
+        self.txt_cel.delete(0, 'end')
+        self.txt_mail.delete(0, 'end')
+
+
     def reg_ant(self):
-        max = len(self.nome)  # conta quantos indices há na lista
-        print("LISTA COM %i ITENS" % max)
         i = pega_end = self.lbl_indice['text']
         i = int(i)
 
-        self.txt_nome.delete(0, 'end')
-        self.txt_end.delete(0, 'end')
-        i = i - 1
-        self.txt_nome.insert(0, self.nome[i])
-        self.txt_end.insert(0, self.endereco[i])
-        self.txt_telc.insert(0, self.telcomercial[i])
-        self.txt_telres.insert(0, self.telresidencial[i])
-        self.txt_cel.insert(0, self.celular[i])
-        self.txt_mail.insert(0, self.email[i])
-        print(i)
-
-
-
-        self.lbl_indice['text'] = i
-
         if (i < 1):
             messagebox.showinfo('Aviso', 'Esse é o primeiro registro')
+
+        else:
+            max = len(self.nome)  # conta quantos indices há na lista
+            print("LISTA COM %i ITENS" % max)
+            
+            i = i - 1
+            self.limpa_campos()
+    
+            self.txt_nome.insert(0, self.nome[i])
+            self.txt_end.insert(0, self.endereco[i])
+            self.txt_telc.insert(0, self.telcomercial[i])
+            self.txt_telres.insert(0, self.telresidencial[i])
+            self.txt_cel.insert(0, self.celular[i])
+            self.txt_mail.insert(0, self.email[i])
+            print(i)
+            self.lbl_indice['text'] = i
+
+
+            
+            
+    def deletar(self):
+        deletar = self.lbl_indice['text']
+        deletar = int(deletar)
+
+        del self.nome[deletar]
+        del self.endereco[deletar]
+        del self.telcomercial[deletar]
+        del self.telresidencial[deletar]
+        del self.celular[deletar]
+        del self.email[deletar]
+        
+        self.reg_ant() #CHAMADA PARA RETORNAR AO REGISTRO ANTERIOR
+
+        if (len(self.nome) == 0):
+            self.limpa_campos()
+            
+
+
+
+        
+
+        
 #Fim das funções dos botões        
     
 

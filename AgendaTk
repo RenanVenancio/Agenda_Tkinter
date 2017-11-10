@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
 
 
 class tela_cad:
@@ -14,9 +15,19 @@ class tela_cad:
 
         self.jan = janela
 
+
         self.cab = Frame(janela)  # container para acomodar os botoões do cabeçalho
         self.campos = Frame(janela)  ##container para acomodar os campos
+        self.cab_busca= Frame(janela)   #Container para cabeçalho da busca
 
+        self.lbl_busca = Label(self.cab_busca, text = 'Busca:', fg="white")
+        self.combo_busca = ttk.Combobox(self.cab_busca, width = 50)
+        self.lbl_bkg = Label(self.cab_busca, width=10, height=5, bg='black')
+        self.combo_busca.bind('<Return>', self.confirma_enter)
+        self.combo_busca.bind('<b>', self.confirma_enter)
+
+        self.combo_busca['values'] = self.nome
+        
         self.bt_novo = Button(self.cab, width=10, text='Novo', command = self.novo_reg)
         self.bt_gravar = Button(self.cab, width=10, text='Gravar', command=self.gravar)
         self.bt_excl = Button(self.cab, width=10, text='Excluir', command=self.msgConfirm)
@@ -46,6 +57,11 @@ class tela_cad:
         self.txt_mail = Entry(self.campos, width=20)
 
         # Gerenciando Layout dos botoes principais
+        self.lbl_busca.pack(side="left")
+        self.combo_busca.pack()
+
+
+                
         self.lbl_indice.pack(anchor=NW, side=LEFT)
         self.bt_novo.pack(anchor=N, side=LEFT)
         self.bt_gravar.pack(anchor=N, side=LEFT)
@@ -54,6 +70,7 @@ class tela_cad:
         self.bt_ant.pack(anchor=NW, side=LEFT)
         self.bt_prox.pack(anchor=NW, side=LEFT)
         self.bt_ult.pack(anchor=NW, side=LEFT)
+        
 
         # Gerenciando Layout dos campos
         self.lbl_nome.pack(anchor=W)
@@ -71,10 +88,28 @@ class tela_cad:
 
         self.jan.title("Cadastro")
 
+        self.cab_busca.pack(anchor = N)
         self.cab.pack(anchor=N)
         self.campos.pack()
 
     # Funções dos botões
+
+    def confirma_enter(self, event):
+        print('TECLA ENTER PRESSIONADA')
+        #self.combo_busca.set('')
+        lista = []
+        busca = self.combo_busca.get()
+        indice = []
+        valor = []
+
+        r = len(self.nome)
+
+        for i in range(r):
+            if (self.nome[i].startswith(busca) == 1):
+                print(self.nome[i])
+                self.combo_busca.current(i)
+
+
     def msgConfirm(self):
         if messagebox.askyesno('Confirmar', 'Deseja excluir esse contato?') == True:
             print('Chame a função de Excluir')
@@ -83,7 +118,11 @@ class tela_cad:
         else:
             print('Não chame a função')
 
+
+
     def gravar(self):  # Lançando nomes na lista   *O BOTÃO GRAVAR CHAMA ESSA FUNÇÃO
+        self.combo_busca['values'] = self.nome #ATUALIZA A COMBO
+        max = len(self.nome)  # conta quantos indices há na lista
 
         i = self.lbl_indice['text']
 
@@ -93,7 +132,9 @@ class tela_cad:
         pega_tlc = self.txt_telc.get()
         pega_cel = self.txt_cel.get()
         pega_email = self.txt_mail.get()
-        if(i=='(novo)'):
+
+        
+        if(i=='(novo)' or max ==0):
             print('ADICIONANDO À LISTA')
 
 
@@ -104,33 +145,32 @@ class tela_cad:
             self.celular.append(pega_cel)
             self.email.append(pega_email)
 
-        else:
+            self.ultimo_reg()   #PULA PRO ULTIMO ADICIONADO
+
+        if(i != '(novo)'):
             i = int(i)   #CONVERTE O INDICE PARA INTEIRO
 
-            print('ALTERAR EM  INDICE %i'%i)
+            print('ALTERE EM  INDICE %i'%i)
             print(pega_nome)
             print(pega_end)
-            print(pega_cel)
-            print(pega_tlc)
             print(pega_tlrs)
+            print(pega_tlc)
+            print(pega_cel)
+            
+            
 
-            self.nome[i] = ''
-            self.endereco[i] = ''
-            self.telresidencial[i] = ''
-            self.telcomercial[i] = ''
-            self.celular[i] = ''
-            self.email[i]
-
+                        
             self.nome[i] = pega_nome
             self.endereco[i] = pega_end
             self.telresidencial[i] = pega_tlrs
             self.telcomercial[i] = pega_tlc
             self.celular[i] = pega_cel
             self.email[i] = pega_email
+            
 
     def prox_reg(self):
-
-
+        self.combo_busca['values'] = self.nome #ATUALIZA A COMBO
+        
         max = len(self.nome)  # conta quantos indices há na lista
         print("LISTA COM %i ITENS" % max)
         i = pega_end = self.lbl_indice['text']
@@ -146,8 +186,8 @@ class tela_cad:
         if (i + 2 <= max):
             i = i + 1
             self.lbl_indice['text'] = i
-            self.txt_nome.delete(0, 'end')
-            self.txt_end.delete(0, 'end')
+
+            self.limpa_campos()      #LIBERA OS CAMPOS PARA RECEBER NOVOS DADOS
 
             self.txt_nome.insert(0, self.nome[i])
             self.txt_end.insert(0, self.endereco[i])
@@ -170,6 +210,7 @@ class tela_cad:
         self.txt_mail.delete(0, 'end')
 
     def reg_ant(self):
+        self.combo_busca['values'] = self.nome #ATUALIZA A COMBO
         max = len(self.nome)  # conta quantos indices há na lista
 
         i = pega_end = self.lbl_indice['text']
@@ -204,6 +245,7 @@ class tela_cad:
             self.lbl_indice['text'] = i
 
     def ultimo_reg(self):
+        self.combo_busca['values'] = self.nome #ATUALIZA A COMBO
         max = len(self.nome)  # conta quantos indices há na lista
 
         if(max==0):
@@ -222,6 +264,7 @@ class tela_cad:
 
 
     def primeiro_reg(self):
+        self.combo_busca['values'] = self.nome #ATUALIZA A COMBO
 
         max = len(self.nome)  # conta quantos indices há na lista
 
@@ -241,11 +284,14 @@ class tela_cad:
             self.txt_mail.insert(0, self.email[0])
 
     def novo_reg(self):
+        self.txt_nome.focus()
+        self.combo_busca['values'] = self.nome #ATUALIZA A COMBO
         self.lbl_indice['text'] = '(novo)'  # INDO PRA O ULTIMO INDICE
         self.limpa_campos()
 
 
     def deletar(self):
+        self.combo_busca['values'] = self.nome #ATUALIZA A COMBO
         deletar = self.lbl_indice['text']
         deletar = int(deletar)
 
